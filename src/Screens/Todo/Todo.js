@@ -57,7 +57,8 @@ const ReminderItem = ({ id, name, time, status, description, color, onDelete, on
   );
 };
 
-const ToDoScreen = ({ navigation }) => {
+const ToDoScreen = ({ route,navigation }) => {
+  const { cardName, userEmail, userId } = route.params; // Destructure passed parameters
   const [reminders, setReminders] = useState([]);
   const [newReminderName, setNewReminderName] = useState('');
   const [newReminderDescription, setNewReminderDescription] = useState('');
@@ -166,6 +167,14 @@ const ToDoScreen = ({ navigation }) => {
       style={styles.mainScreen}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
+       <View style={styles.headerContainer}>
+        <Text style={styles.cardName}>{cardName}</Text>
+        <View style={styles.profileContainer}>
+          <Image source={require('../../../assets/boy.png')} style={styles.profileImage} />
+          <Text style={styles.userEmail}>{userEmail}</Text>
+        </View>
+      </View>
+
       <FlatList
         data={reminders}
         renderItem={({ item }) => (
@@ -179,12 +188,13 @@ const ToDoScreen = ({ navigation }) => {
         ListHeaderComponent={
           <>
             <View style={styles.header}>
-              <View style={styles.profile}>
+              {/* <View style={styles.profile}>
                 <Image source={{ uri: 'https://via.placeholder.com/150' }} style={styles.profileImage} />
                 <Text style={styles.userName}>Luiz</Text>
-              </View>
+              </View> */}
               {/* <Text style={styles.calendarDate}>Date Here</Text> */}
             </View>
+            
             <View style={styles.inputContainer}>
               <TextInput
                 style={styles.input}
@@ -213,33 +223,36 @@ const ToDoScreen = ({ navigation }) => {
     </KeyboardAvoidingView>
   );
 };
+
+
 const styles = StyleSheet.create({
   mainScreen: {
     flex: 1,
     padding: 20,
     backgroundColor: '#f0f9ff'
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center'
-  },
-  profile: {
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  profileImage: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    marginRight: 10,
-    marginTop: 90
-  },
-  userName: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginTop: 90
-  },
+  // header: {
+  //   flexDirection: 'row',
+  //   justifyContent: 'space-between',
+  //   alignItems: 'center'
+  // },
+  // profile: {
+  //   flexDirection: 'row',
+  //   alignItems: 'center'
+  // },
+
+  // profileImage: {
+  //   width: 40,
+  //   height: 40,
+  //   borderRadius: 20,
+  //   marginRight: 10,
+  //   marginTop: 90
+  // },
+  // userName: {
+  //   fontSize: 18,
+  //   fontWeight: 'bold',
+  //   marginTop: 90
+  // },
   calendarDate: {
     fontSize: 18,
     color: 'salmon',
@@ -319,7 +332,33 @@ const styles = StyleSheet.create({
   deleteButtonText: {
     color: "red",
     fontWeight: "bold"
-  }
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 10,
+  },
+  cardName: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#333', // You can change this color as needed
+  },
+  profileContainer: {
+    alignItems: 'center', // Center items vertically
+  },
+  profileImage: {
+    width: 90,
+    height: 90,
+    borderRadius: 10,
+    marginTop:40
+  },
+  userEmail: {
+    fontSize: 16,
+    color: '#555', // You can change this color as needed
+    textAlign: 'center', // Center the email text
+    marginTop: 4, // Space between the image and email
+  },
 });
 
 export default ToDoScreen;

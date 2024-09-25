@@ -3,8 +3,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Icon } from 'react-native-elements';
-import { View, TouchableOpacity, StyleSheet } from 'react-native';
-import SignInScreen from './src/Screens/Login/Login';
+import { StyleSheet } from 'react-native';
+import SignInScreen from './src/Screens/Sign up/Login';
 import SignUpScreen from './src/Screens/Sign up/SignUp';
 import WelcomeScreen from './src/Screens/Welcome/Welcome';
 import HomeScreen from './src/Screens/Home/Home';
@@ -14,9 +14,6 @@ import SettingsScreen from './src/Screens/Settings/Settings';
 import TodoScreen from './src/Screens/Todo/Todo';
 import WorkScreen from './src/Screens/Work/Work';
 import ShoppingScreen from './src/Screens/Shopping/Shopping';
-
-
-
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -30,42 +27,44 @@ function MainTabs() {
 
           if (route.name === 'Home') {
             iconName = 'home';
-          } else if (route.name === 'Medication') {
-            iconName = 'medical-bag';
+          // } else if (route.name === 'Medication') {
+          //   iconName = 'medical-bag';
           } else if (route.name === 'Statistics') {
             iconName = 'chart-line';
           } else if (route.name === 'Settings') {
             iconName = 'cog';
           }
 
-          return <Icon name={iconName} type="material-community" color={color} size={size} />;
+          // Icon size increased to 35
+          return <Icon name={iconName} type="material-community" color={color} size={35} />;
         },
-        tabBarShowLabel: false,
+        tabBarActiveTintColor: 'salmon', // Active tab color
+        tabBarInactiveTintColor: 'white', // Inactive tab color
+        tabBarStyle: styles.tabBar, // Tab bar styling
+        tabBarShowLabel: true, // Show labels below icons
+        tabBarLabelStyle: styles.tabLabel, // Label styling
       })}
     >
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Medication" component={MedicationScreen} />
-      <Tab.Screen
-        name="Add"
-        options={{
-          tabBarButton: (props) => (
-            <TouchableOpacity {...props} style={styles.addButton}>
-              <Icon name="plus" type="material-community" color="#fff" size={30} />
-            </TouchableOpacity>
-          ),
-        }}
-        listeners={({ navigation }) => ({
-          tabPress: (e) => {
-            e.preventDefault();
-            // Handle the action of the add button here
-            console.log('Add button pressed');
-          },
-        })}
-      >
-        {() => null}
-      </Tab.Screen>
-      <Tab.Screen name="Statistics" component={StatisticsScreen} />
-      <Tab.Screen name="Settings" component={SettingsScreen} />
+      <Tab.Screen 
+        name="Home" 
+        component={HomeScreen} 
+        options={{ title: 'Home' }} 
+      />
+      {/* <Tab.Screen 
+        name="Medication" 
+        component={MedicationScreen} 
+        options={{ title: 'Medication' }} 
+      /> */}
+      <Tab.Screen 
+        name="Statistics" 
+        component={StatisticsScreen} 
+        options={{ title: 'Statistics' }} 
+      />
+      <Tab.Screen 
+        name="Settings" 
+        component={SettingsScreen} 
+        options={{ title: 'Settings' }} 
+      />
     </Tab.Navigator>
   );
 }
@@ -94,17 +93,17 @@ export default function App() {
           component={MainTabs}
           options={{ headerShown: false }}
         />
-         <Stack.Screen
+        <Stack.Screen
           name="ToDo"
           component={TodoScreen}
           options={{ headerShown: false }}
         />
-         <Stack.Screen
+        <Stack.Screen
           name="Work"
           component={WorkScreen}
           options={{ headerShown: false }}
         />
-         <Stack.Screen
+        <Stack.Screen
           name="Shopping"
           component={ShoppingScreen}
           options={{ headerShown: false }}
@@ -115,14 +114,19 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
-  addButton: {
-    top: -20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#4a90e2',
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    elevation: 5,
+  tabBar: {
+    backgroundColor: 'black', // Tab bar background color
+    height: 90, // Increased height of the bottom tabs background
+    borderTopWidth: 5, // Top border to give a clean separation
+    borderTopColor: '#e0e0e0', // Light grey color for the border
+    paddingBottom: 10, // Adds padding at the bottom
+    paddingTop: 5, // Adds padding at the top
+    borderRadius: 15,
+    marginBottom:5
+  },
+  tabLabel: {
+    fontSize: 15, // Small font size for tab labels
+    fontWeight: '600', // Bold font for better readability
+    marginBottom: 5, // Spacing between label and icon
   },
 });

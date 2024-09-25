@@ -190,90 +190,7 @@
 
 
 
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Modal, Button } from 'react-native';
-import { Ionicons, MaterialCommunityIcons, FontAwesome } from '@expo/vector-icons';
-import { Calendar } from 'react-native-calendars';
-
-const HomeScreen = ({ navigation }) => {
-  const [isModalVisible, setModalVisible] = useState(false);
-
-  const openModal = () => {
-    setModalVisible(true);
-  };
-
-  const closeModal = () => {
-    setModalVisible(false);
-  };
-
-  return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.time}>12:50</Text>
-        <View style={styles.icons}>
-          <Ionicons name="notifications-off-circle-outline" size={24} color="white" style={styles.icon} />
-        </View>
-      </View>
-
-      <View style={styles.cardContainer}>
-        <TouchableOpacity style={styles.card}>
-          <Ionicons name="briefcase-outline" size={24} color="green" />
-          <Text style={styles.cardNumber1}>0</Text>
-          <Text style={styles.cardText1}>All</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.card}>
-          <FontAwesome name="sun-o" size={24} color="yellow" />
-          <Text style={styles.cardNumber}>0</Text>
-          <Text style={styles.cardText}>Today</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.card} onPress={openModal}>
-          <MaterialCommunityIcons name="calendar-clock" size={24} color="red" />
-          <Text style={styles.cardNumber}>0</Text>
-          <Text style={styles.cardText}>Scheduled</Text>
-        </TouchableOpacity>
-      </View>
-
-      <Text style={styles.myLists}>My Lists</Text>
-
-      <View style={styles.listContainer}>
-        <TouchableOpacity style={styles.listCard} onPress={() => navigation.navigate('ToDo')}>
-          <FontAwesome name="list" size={24} color="blue" />
-          <Text style={styles.cardNumber}>0</Text>
-          <Text style={styles.cardText}>ToDo</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.listCard} onPress={() => navigation.navigate('Shopping')}>
-          <MaterialCommunityIcons name="cart-outline" size={24} color="orange" />
-          <Text style={styles.cardNumber}>0</Text>
-          <Text style={styles.cardText}>Shopping</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.listCard} onPress={() => navigation.navigate('Work')}>
-          <Ionicons name="briefcase-outline" size={24} color="red" />
-          <Text style={styles.cardNumber}>0</Text>
-          <Text style={styles.cardText}>Work</Text>
-        </TouchableOpacity>
-      </View>
-
-      <Modal
-        visible={isModalVisible}
-        transparent={true}
-        animationType="slide"
-        onRequestClose={closeModal}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Calendar />
-            <Button title="Close" onPress={closeModal} />
-          </View>
-        </View>
-      </Modal>
-    </ScrollView>
-  );
-};
-
+  
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
@@ -282,13 +199,29 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-between', // Moves time to the left and profile to the right
     alignItems: 'center',
     marginBottom: 20,
   },
   time: {
     color: 'white',
     fontSize: 20,
+  },
+  profileContainer: {
+    alignItems: 'center',
+  },
+  profileIcon: {
+    width: 90, // Increase the size of the profile image
+    height: 90,
+    borderRadius: 35, 
+    marginLeft:190,
+    marginTop:20
+  },
+  userEmail: {
+    color: 'white',
+    fontSize: 16,
+    marginTop: 5,
+    marginLeft:190
   },
   icons: {
     flexDirection: 'row',
@@ -307,6 +240,11 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 3,
   },
   cardNumber: {
     color: 'white',
@@ -344,6 +282,22 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 3,
+  },
+  calendarCard: {
+    backgroundColor: '#333',
+    padding: 15,
+    borderRadius: 10,
+    marginVertical: 20,
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 8,
   },
   modalContainer: {
     flex: 1,
