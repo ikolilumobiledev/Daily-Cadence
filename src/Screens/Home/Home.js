@@ -270,8 +270,10 @@ const HomeScreen = ({ navigation }) => {
       cardName,    // Pass the card name
       userEmail,   // Pass the user email
       userId,      // Pass the user ID
+      username     // Pass the username
     });
   };
+  
 
   return (
     <ScrollView contentContainerStyle={styles.container}>

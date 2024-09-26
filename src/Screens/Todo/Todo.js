@@ -1,11 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, TextInput, KeyboardAvoidingView, Platform, Animated, Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getFirestore, doc, setDoc } from 'firebase/firestore';
+import app from '../../Authentication/Firebase/Config'; // Make sure to configure Firebase properly
 
 const colors = ['#f28b82', '#fbbc04', '#fff475', '#ccff90', '#a7ffeb', '#cbf0f8', '#aecbfa', '#d7aefb', '#fdcfe8'];
+const db = getFirestore(app);
+
 
 const getRandomColor = () => {
   return colors[Math.floor(Math.random() * colors.length)];
+};
+// Function to generate unique ID
+const generateUniqueId = () => {
+  return `${new Date().getTime()}-${Math.floor(Math.random() * 1000)}`;
 };
 
 const ReminderItem = ({ id, name, time, status, description, color, onDelete, onEdit }) => {
@@ -57,8 +65,8 @@ const ReminderItem = ({ id, name, time, status, description, color, onDelete, on
   );
 };
 
-const ToDoScreen = ({ route,navigation }) => {
-  const { cardName, userEmail, userId } = route.params; // Destructure passed parameters
+const ToDoScreen = ({ route, navigation }) => {
+  const { cardName, userEmail, userId, username } = route.params; // Destructure passed parameters
   const [reminders, setReminders] = useState([]);
   const [newReminderName, setNewReminderName] = useState('');
   const [newReminderDescription, setNewReminderDescription] = useState('');
@@ -88,6 +96,16 @@ const ToDoScreen = ({ route,navigation }) => {
     }
   };
 
+  const addReminderToFirestore = async (reminder) => {
+    try {
+      const reminderRef = doc(db, 'Reminders', reminder.id);
+      await setDoc(reminderRef, reminder);
+      console.log('Reminder added to Firestore:', reminder);
+    } catch (error) {
+      console.error('Error saving reminder to Firestore:', error.message);
+    }
+  };
+
   const addReminder = () => {
     if (!newReminderName || !newReminderDescription) {
       return;
@@ -110,16 +128,20 @@ const ToDoScreen = ({ route,navigation }) => {
       setEditId(null);
     } else {
       const newReminder = {
-        id: (reminders.length + 1).toString(),
+        id: generateUniqueId(),
         name: newReminderName,
         time: time,
         status: 'Done',
         description: newReminderDescription,
-        color: getRandomColor()
+        color: getRandomColor(),
+        userId: userId, // Include user-specific ID
+        email: userEmail // Include user-specific email
       };
+
       const updatedReminders = [...reminders, newReminder];
       setReminders(updatedReminders);
       saveReminders(updatedReminders);
+      addReminderToFirestore(newReminder); // Save reminder to Firestore
     }
 
     setNewReminderName('');
@@ -150,9 +172,7 @@ const ToDoScreen = ({ route,navigation }) => {
       return reminderDate.toDateString() === today.toDateString();
     }).length;
     const scheduledCount = reminders.filter(reminder => {
-      // Implement your logic to filter scheduled reminders
-      // For now, count all reminders as scheduled
-      return true;
+      return true; // Include logic to filter scheduled reminders if necessary
     }).length;
 
     navigation.setParams({
@@ -167,11 +187,11 @@ const ToDoScreen = ({ route,navigation }) => {
       style={styles.mainScreen}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-       <View style={styles.headerContainer}>
+      <View style={styles.headerContainer}>
         <Text style={styles.cardName}>{cardName}</Text>
         <View style={styles.profileContainer}>
           <Image source={require('../../../assets/boy.png')} style={styles.profileImage} />
-          <Text style={styles.userEmail}>{userEmail}</Text>
+          <Text style={styles.userEmail}>{username}</Text>
         </View>
       </View>
 
@@ -187,14 +207,6 @@ const ToDoScreen = ({ route,navigation }) => {
         keyExtractor={(item) => item.id}
         ListHeaderComponent={
           <>
-            <View style={styles.header}>
-              {/* <View style={styles.profile}>
-                <Image source={{ uri: 'https://via.placeholder.com/150' }} style={styles.profileImage} />
-                <Text style={styles.userName}>Luiz</Text>
-              </View> */}
-              {/* <Text style={styles.calendarDate}>Date Here</Text> */}
-            </View>
-            
             <View style={styles.inputContainer}>
               <TextInput
                 style={styles.input}
@@ -213,7 +225,7 @@ const ToDoScreen = ({ route,navigation }) => {
                 onPress={addReminder}
                 disabled={!newReminderName || !newReminderDescription}
               >
-                <Text style={styles.addButtonText}>{isEditing ? '+' : '+'}</Text>
+                <Text style={styles.addButtonText}>{isEditing ? 'Update' : '+'}</Text>
               </TouchableOpacity>
             </View>
           </>
@@ -223,6 +235,10 @@ const ToDoScreen = ({ route,navigation }) => {
     </KeyboardAvoidingView>
   );
 };
+
+
+
+
 
 
 const styles = StyleSheet.create({
