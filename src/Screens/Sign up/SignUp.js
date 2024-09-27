@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Text, ScrollView, TextInput, SafeAreaView, TouchableOpacity } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { StyleSheet, View, Text, ScrollView, TextInput, SafeAreaView, TouchableOpacity, Animated, ActivityIndicator } from 'react-native';
 import app from '../../Authentication/Firebase/Config';
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc, getFirestore } from "firebase/firestore"; 
@@ -12,34 +12,26 @@ const SignUpScreen = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [phonenumber, setPhonenumber] = useState('');
     const [password, setPassword] = useState('');
+    const [isLoading, setIsLoading] = useState(false); // Loading state
+    const [message, setMessage] = useState(''); // Success message
+    const rotation = useRef(new Animated.Value(0)).current;
 
     const generateUniqueId = () => {
         return 'id-' + new Date().getTime() + '-' + Math.floor(Math.random() * 1000);
     };
 
-    // const handleLawyerSubmit = async () => {
-    //     const newLawyer = {
-    //         username,
-    //         email,
-    //         phonenumber,
-    //         password,
-    //         id: generateUniqueId()
-    //     };
-
-    //     console.log(newLawyer);
-
-    //     try {
-    //         await setDoc(doc(db, "Lawyer", newLawyer.id), newLawyer);
-    //         await createUserWithEmailAndPassword(auth, email, password);
-    //         console.log('Successfully registered as a lawyer:', email);
-    //         navigation.navigate('Payment');
-    //     } catch (error) {
-    //         console.error('Error during registration:', error.message);
-    //         alert('Registration failed: ' + error.message);
-    //     }
-    // };
-
     const handleCustomerSubmit = async () => {
+        setIsLoading(true); // Start loading
+
+        // Start spinning animation
+        Animated.loop(
+            Animated.timing(rotation, {
+                toValue: 1,
+                duration: 1000,
+                useNativeDriver: true,
+            })
+        ).start();
+
         const newCustomer = {
             username,
             email,
@@ -54,12 +46,21 @@ const SignUpScreen = ({ navigation }) => {
             await setDoc(doc(db, "Customer", newCustomer.id), newCustomer);
             await createUserWithEmailAndPassword(auth, email, password);
             console.log('Successfully registered as a customer:', email);
+            setMessage('Registration successful!'); // Success message
+            setIsLoading(false); // Stop loading
             navigation.navigate('Main');
         } catch (error) {
             console.error('Error during registration:', error.message);
             alert('Registration failed: ' + error.message);
+            setIsLoading(false); // Stop loading
         }
     };
+
+    // Interpolating rotation value to a degree for the button
+    const rotateInterpolate = rotation.interpolate({
+        inputRange: [0, 1],
+        outputRange: ['0deg', '360deg']
+    });
 
     return (
         <SafeAreaView style={styles.log}>
@@ -117,14 +118,18 @@ const SignUpScreen = ({ navigation }) => {
                 </View>
 
                 <View style={styles.register}>
-                    {/* <TouchableOpacity style={styles.registerbtn} onPress={() => handleLawyerSubmit()}>
-                        <Text style={styles.registertext}>Submit as Lawyer</Text>
-                    </TouchableOpacity> */}
-
-                    <TouchableOpacity style={styles.registerbtn} onPress={() => handleCustomerSubmit()}>
-                        <Text style={styles.registertext}>Sign UP</Text>
+                    <TouchableOpacity style={styles.registerbtn} onPress={handleCustomerSubmit} disabled={isLoading}>
+                        {isLoading ? (
+                            <Animated.View style={{ transform: [{ rotate: rotateInterpolate }] }}>
+                                <ActivityIndicator size="small" color="#fff" />
+                            </Animated.View>
+                        ) : (
+                            <Text style={styles.registertext}>Sign Up</Text>
+                        )}
                     </TouchableOpacity>
                 </View>
+
+                {message ? <Text style={styles.successMessage}>{message}</Text> : null}
             </ScrollView>
         </SafeAreaView>
     );

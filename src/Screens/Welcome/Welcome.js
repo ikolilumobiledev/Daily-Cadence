@@ -15,10 +15,11 @@ const WelcomeScreen = ({ navigation }) => {
                     {/* <Text style={styles.welcomeText}>Welcome to Daily Cadence</Text> */}
                     {/* <Text style={styles.tagline}>Revolutionizing Daily Activities</Text> */}
                 </View>
-                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('SignIn')}>
-                    <Text style={styles.buttonText}>Get Started</Text>
-                </TouchableOpacity>
+                {/* Moved footer to hold the button */}
                 <View style={styles.footer}>
+                    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('SignIn')}>
+                        <Text style={styles.buttonText}>Get Started</Text>
+                    </TouchableOpacity>
                     <Text style={styles.footerText}>© 2024 Daily Cadence</Text>
                 </View>
             </View>
@@ -35,7 +36,7 @@ const styles = StyleSheet.create({
     overlay: {
         flex: 1,
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        justifyContent: 'center',
+        justifyContent: 'space-between', // Adjusts layout to space items out
         alignItems: 'center',
         width: '100%',
     },
@@ -61,14 +62,15 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: 'white',
         textAlign: 'center',
-        marginTop:30
+        marginTop: 30,
     },
     button: {
         backgroundColor: '#6200EE',
         paddingVertical: 12,
         paddingHorizontal: 32,
         borderRadius: 25,
-        marginTop:300
+        marginTop: 10, 
+        marginBottom:30
     },
     buttonText: {
         fontSize: 18,
@@ -78,10 +80,12 @@ const styles = StyleSheet.create({
     footer: {
         position: 'absolute',
         bottom: 20,
+        alignItems: 'center', // Center the button and footer text
     },
     footerText: {
         fontSize: 14,
         color: 'white',
+        marginTop: 5, // Space between button and footer text
     },
 });
 

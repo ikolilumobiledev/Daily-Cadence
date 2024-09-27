@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Animated, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Animated, ActivityIndicator, ImageBackground } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import app from '../../Authentication/Firebase/Config';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
@@ -67,67 +67,76 @@ export default function SignInScreen({ navigation }) {
   });
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.subtitle}>Login</Text>
-      <TextInput
-        value={email}
-        onChangeText={(text) => setEmail(text)}
-        placeholderTextColor='#a4a6a5'
-        autoCorrect={false}
-        autoComplete='off'
-        keyboardType='email-address'
-        style={styles.forminput}
-        placeholder='Email Address'
-      />
-      <TextInput
-        value={password}
-        onChangeText={(text) => setPassword(text)}
-        placeholderTextColor='#a4a6a5'
-        secureTextEntry={true}
-        autoCorrect={false}
-        autoCapitalize='none'
-        style={styles.forminput}
-        placeholder='Password'
-      />
-      <TouchableOpacity>
-        <Text style={styles.forgotPassword}>Forgot Password?</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={handleLogIn} disabled={isLoading}>
-        {isLoading ? (
-          <Animated.View style={{ transform: [{ rotate: rotateInterpolate }] }}>
-            <ActivityIndicator size="small" color="#fff" />
-          </Animated.View>
-        ) : (
-          <Text style={styles.buttonText}>Login</Text>
-        )}
-      </TouchableOpacity>
-      <Text style={styles.or}>OR</Text>
-      <View style={styles.socialButtons}>
-        {/* Social Buttons can go here */}
+    <ImageBackground
+      source={require('../../../assets/log.jpg')} // Background image
+      style={styles.background} // Style for the background
+    >
+      <View style={styles.container}>
+        <Text style={styles.subtitle}>Login</Text>
+        <TextInput
+          value={email}
+          onChangeText={(text) => setEmail(text)}
+          placeholderTextColor='#a4a6a5'
+          autoCorrect={false}
+          autoComplete='off'
+          keyboardType='email-address'
+          style={styles.forminput}
+          placeholder='Email Address'
+        />
+        <TextInput
+          value={password}
+          onChangeText={(text) => setPassword(text)}
+          placeholderTextColor='#a4a6a5'
+          secureTextEntry={true}
+          autoCorrect={false}
+          autoCapitalize='none'
+          style={styles.forminput}
+          placeholder='Password'
+        />
+        {/* <TouchableOpacity>
+          <Text style={styles.forgotPassword}>Forgot Password?</Text>
+        </TouchableOpacity> */}
+        <TouchableOpacity style={styles.button} onPress={handleLogIn} disabled={isLoading}>
+          {isLoading ? (
+            <Animated.View style={{ transform: [{ rotate: rotateInterpolate }] }}>
+              <ActivityIndicator size="small" color="#fff" />
+            </Animated.View>
+          ) : (
+            <Text style={styles.buttonText}>Login</Text>
+          )}
+        </TouchableOpacity>
+        <Text style={styles.or}>OR</Text>
+        <View style={styles.socialButtons}>
+          {/* Social Buttons can go here */}
+        </View>
+        <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
+          <Text style={styles.signUp}>
+            Don't have an account? <Text style={styles.signUpLink}>Sign Up</Text>
+          </Text>
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
-        <Text style={styles.signUp}>
-          Don't have an account? <Text style={styles.signUpLink}>Sign Up</Text>
-        </Text>
-      </TouchableOpacity>
-    </View>
+    </ImageBackground>
   );
 }
 
-
-
 const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+    justifyContent: 'center', // Center the content
+    alignItems: 'center', // Center the content
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
     paddingHorizontal: 20,
-    backgroundColor: '#f8f9fa'
+    backgroundColor: 'rgba(248, 249, 250, 0.8)' // Slightly transparent background for better readability
   },
   subtitle: {
     fontSize: 32,
     fontWeight: '600',
     marginBottom: 20,
-    marginHorizontal: 120
+    marginHorizontal: 120,
+    color: '#1e3d58', // Change color for better contrast
   },
   forminput: {
     height: 50,
@@ -136,7 +145,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     paddingHorizontal: 10,
     borderRadius: 5,
-    backgroundColor: '#fff'
+    backgroundColor: '#fff',
   },
   forgotPassword: {
     textAlign: 'right',
@@ -148,7 +157,7 @@ const styles = StyleSheet.create({
     padding: 15,
     alignItems: 'center',
     borderRadius: 30,
-    marginVertical: 20
+    marginVertical: 20,
   },
   buttonText: {
     color: 'white',
@@ -157,7 +166,7 @@ const styles = StyleSheet.create({
   or: {
     textAlign: 'center',
     marginVertical: 10,
-    color: '#aaa'
+    color: '#aaa',
   },
   socialButtons: {
     flexDirection: 'row',
@@ -168,12 +177,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginVertical: 10,
     color: '#aaa',
-    fontSize: 16
+    fontSize: 16,
   },
   signUpLink: {
     color: 'red',
     fontWeight: 'bold',
-    fontSize: 16
+    fontSize: 16,
   },
 });
- 
