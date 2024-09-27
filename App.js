@@ -36,7 +36,7 @@ function MainTabs() {
           }
 
           // Icon size increased to 35
-          return <Icon name={iconName} type="material-community" color={color} size={35} />;
+          return <Icon name={iconName} type="material-community" color={color} size={30} />;
         },
         tabBarActiveTintColor: 'salmon', // Active tab color
         tabBarInactiveTintColor: 'white', // Inactive tab color

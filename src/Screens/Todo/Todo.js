@@ -1039,15 +1039,16 @@ const ToDoScreen = ({ route, navigation }) => {
             </TouchableOpacity>
 
             {showTimePicker && (
-              <DateTimePicker
-                value={reminderTime}
-                mode="time"
-                is24Hour={true}
-                display="default"
-                onChange={(event, selectedTime) => {
-                  setShowTimePicker(false);
-                  if (selectedTime) {
-                    setReminderTime(selectedTime);
+        <DateTimePicker
+          value={reminderTime}
+          mode="time"
+          is24Hour={true}
+          display="spinner" // or "default"
+          textColor="white" // Only works on iOS
+          onChange={(event, selectedTime) => {
+            setShowTimePicker(false);
+            if (selectedTime) {
+              setReminderTime(selectedTime);
                   }
                 }}
               />
@@ -1156,7 +1157,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   reminderDescription: {
-    fontSize: 14,
+    fontSize: 19,
     marginVertical: 5,
     flexWrap: 'wrap', // Breaks text to the next line when long
   },
@@ -1188,7 +1189,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   reminderDate: {
-    fontSize: 12, // Adjust size as needed
+    fontSize: 17, // Adjust size as needed
     color: '#888', // Light grey color
     marginTop: 5, // Add some spacing at the top
     fontStyle: 'italic', // Optional: make the date italic to differentiate it

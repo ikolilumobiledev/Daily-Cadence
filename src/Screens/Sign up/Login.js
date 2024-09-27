@@ -68,7 +68,7 @@ export default function SignInScreen({ navigation }) {
 
   return (
     <ImageBackground
-      source={require('../../../assets/log.jpg')} // Background image
+      source={require('../../../assets/back (2).jpg')} // Background image
       style={styles.background} // Style for the background
     >
       <View style={styles.container}>
@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
   or: {
     textAlign: 'center',
     marginVertical: 10,
-    color: '#aaa',
+    color: 'black',
   },
   socialButtons: {
     flexDirection: 'row',
@@ -176,12 +176,12 @@ const styles = StyleSheet.create({
   signUp: {
     textAlign: 'center',
     marginVertical: 10,
-    color: '#aaa',
-    fontSize: 16,
+    color: 'black',
+    fontSize: 19,
   },
   signUpLink: {
     color: 'red',
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 20,
   },
 });
