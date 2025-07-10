@@ -3071,6 +3071,7 @@ Node.js v22.16.0
 PS C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend>
 
 //new
+
 const { Sequelize, DataTypes, Model } = require('@sequelize/core');
 const { PostgresDialect } = require('@sequelize/postgres');
 
@@ -3277,3 +3278,107 @@ module.exports = {
   VisitorLog,
   initDatabase
 };
+
+
+//another error
+PS C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend> cd new-backend
+PS C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend> node server.js
+Connected to the database
+✅ Database connected successfully
+❌ Database error: DatabaseError [SequelizeDatabaseError]: column "date" contains null values
+    at PostgresQuery.formatError (C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend\node_modules\@sequelize\postgres\lib\query.js:344:16)
+    at PostgresQuery.run (C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend\node_modules\@sequelize\postgres\lib\query.js:79:18)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend\node_modules\@sequelize\core\lib\sequelize.js:338:16
+    at async Sequelize.queryRaw (C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend\node_modules\@sequelize\core\lib\sequelize.js:325:12)
+    at async PostgresQueryInterface.addColumn (C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend\node_modules\@sequelize\core\lib\abstract-dialect\query-interface.js:158:12)
+    at async VisitorLog.sync (C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend\node_modules\@sequelize\core\lib\model.js:665:11)
+    at async Sequelize.sync (C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend\node_modules\@sequelize\core\lib\sequelize.js:419:9)
+    at async initDatabase (C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend\models\models.js:97:5) {
+  sql: 'ALTER TABLE "visitor_log" ADD COLUMN  "date" DATE NOT NULL;',
+  parameters: {},
+  [cause]: error: column "date" contains null values
+      at Parser.parseErrorMessage (C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend\node_modules\pg-protocol\dist\parser.js:285:98)
+      at Parser.handlePacket (C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend\node_modules\pg-protocol\dist\parser.js:122:29)
+      at Parser.parse (C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend\node_modules\pg-protocol\dist\parser.js:35:38)
+      at Socket.<anonymous> (C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend\node_modules\pg-protocol\dist\index.js:11:42)
+      at Socket.emit (node:events:518:28)
+      at addChunk (node:internal/streams/readable:561:12)
+      at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+      at Readable.push (node:internal/streams/readable:392:5)
+      at TCP.onStreamRead (node:internal/stream_base_commons:189:23) {
+    length: 189,
+    severity: 'ERROR',
+    code: '23502',
+    detail: undefined,
+    hint: undefined,
+    position: undefined,
+    internalPosition: undefined,
+    internalQuery: undefined,
+    where: undefined,
+    schema: 'public',
+    table: 'visitor_log',
+    column: 'date',
+    dataType: undefined,
+    constraint: undefined,
+    file: 'd:\\pginstaller_12.auto\\postgres.windows-x64\\src\\backend\\commands\\tablecmds.c',
+    line: '5295',
+    routine: 'ATRewriteTable',
+    sql: 'ALTER TABLE "visitor_log" ADD COLUMN  "date" DATE NOT NULL;',
+    parameters: undefined
+  }
+}
+node:internal/process/promises:394
+    triggerUncaughtException(err, true /* fromPromise */);
+    ^
+
+DatabaseError [SequelizeDatabaseError]: column "date" contains null values
+    at PostgresQuery.formatError (C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend\node_modules\@sequelize\postgres\lib\query.js:344:16)
+    at PostgresQuery.run (C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend\node_modules\@sequelize\postgres\lib\query.js:79:18)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend\node_modules\@sequelize\core\lib\sequelize.js:338:16
+    at async Sequelize.queryRaw (C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend\node_modules\@sequelize\core\lib\sequelize.js:325:12)
+    at async PostgresQueryInterface.addColumn (C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend\node_modules\@sequelize\core\lib\abstract-dialect\query-interface.js:158:12)
+    at async VisitorLog.sync (C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend\node_modules\@sequelize\core\lib\model.js:665:11)
+    at async Sequelize.sync (C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend\node_modules\@sequelize\core\lib\sequelize.js:419:9)
+    at async initDatabase (C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend\models\models.js:97:5) {
+  sql: 'ALTER TABLE "visitor_log" ADD COLUMN  "date" DATE NOT NULL;',
+  parameters: {},
+  [cause]: error: column "date" contains null values
+      at Parser.parseErrorMessage (C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend\node_modules\pg-protocol\dist\parser.js:285:98)
+      at Parser.handlePacket (C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend\node_modules\pg-protocol\dist\parser.js:122:29)
+      at Parser.parse (C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend\node_modules\pg-protocol\dist\parser.js:35:38)
+      at Socket.<anonymous> (C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend\node_modules\pg-protocol\dist\index.js:11:42)
+      at Socket.emit (node:events:518:28)
+      at addChunk (node:internal/streams/readable:561:12)
+      at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+      at Readable.push (node:internal/streams/readable:392:5)
+      at TCP.onStreamRead (node:internal/stream_base_commons:189:23) {
+    length: 189,
+    severity: 'ERROR',
+    code: '23502',
+    detail: undefined,
+    hint: undefined,
+    position: undefined,
+    internalPosition: undefined,
+    internalQuery: undefined,
+    where: undefined,
+    schema: 'public',
+    table: 'visitor_log',
+    column: 'date',
+    dataType: undefined,
+    constraint: undefined,
+    file: 'd:\\pginstaller_12.auto\\postgres.windows-x64\\src\\backend\\commands\\tablecmds.c',
+    line: '5295',
+    routine: 'ATRewriteTable',
+    sql: 'ALTER TABLE "visitor_log" ADD COLUMN  "date" DATE NOT NULL;',
+    parameters: undefined
+  }
+}
+
+Node.js v22.16.0
+PS C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend>
+
+
+
+
