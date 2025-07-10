@@ -2573,3 +2573,20 @@ module.exports = {
   getAllBranches,              
   getVisitorLogsByBranchCode 
 };
+//
+INSERT INTO departments (branch_name, branch_code) VALUES
+  ('ACCRA BRANCH', '330102'),
+  ('MAKOLA BRANCH', '330111'),
+  ('TEMA BRANCH (COMM', '330120'),
+  ('AIRPORT BRANCH', '330119'),
+  ('MARKET CIRCLE BRANCH TAKORADI', '330401'),
+  ('ADUM BRANCH KUMASI', '330601'),
+  ('WEST HILLS MALL', '330108'),
+  ('JUNCTION SHOPPING CENTRE BRANCH', '330101'),
+  ('TEMA BRANCH (COMM 11)', '330112'),
+  ('ACHIMOTA MALL BRANCH', '330107'),
+  ('ACCRA MALL BRANCH', '330106'),
+  ('KEJETIA BRANCH', '330602');
+//
+  const email = 'admin@fnb.com';
+    const password = 'password12345'
