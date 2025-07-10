@@ -2837,3 +2837,236 @@ initDatabase(); // Creates all 4 tables instantly
 initDatabase().then(() => {
   console.log('🚀 Database and tables ready!');
   const { initDatabase, UsersTable, FnbBranches, AdminUsers, VisitorLog } = require('./models');
+
+
+  //
+  CREATE TABLE users_table (
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    branch VARCHAR(100),
+    branch_code VARCHAR(50),
+    role VARCHAR(50),
+    created_at TIMESTAMP DEFAULT NOW()
+  );
+
+
+  CREATE TABLE visitor_log (
+    id SERIAL PRIMARY KEY,
+    date DATE NOT NULL,
+    timeIn TIME NOT NULL,
+    timeOut TIME,
+    department VARCHAR(100),
+    company VARCHAR(100),
+    picture TEXT, -- or BYTEA if storing binary image data
+    telephone VARCHAR(20),
+    reason TEXT,
+    purpose TEXT,
+    name VARCHAR(100),
+    branch VARCHAR(50),
+    branchName VARCHAR(100)
+  );
+    
+
+  //error
+  PS C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend> node server.js
+Connected to the database
+✅ Database connected successfully
+❌ Database error: DatabaseError [SequelizeDatabaseError]: column "timein" cannot be cast automatically to type timestamp with time zone
+    at PostgresQuery.formatError (C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend\node_modules\@sequelize\postgres\lib\query.js:344:16)
+    at PostgresQuery.run (C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend\node_modules\@sequelize\postgres\lib\query.js:79:18)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend\node_modules\@sequelize\core\lib\sequelize.js:338:16
+    at async Sequelize.queryRaw (C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend\node_modules\@sequelize\core\lib\sequelize.js:325:12)
+    at async VisitorLog.sync (C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend\node_modules\@sequelize\core\lib\model.js:700:11)
+    at async Sequelize.sync (C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend\node_modules\@sequelize\core\lib\sequelize.js:419:9)
+    at async initDatabase (C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend\models\models.js:96:5) {
+  sql: 'ALTER TABLE "visitor_log" ALTER COLUMN "timein" SET NOT NULL;ALTER TABLE "visitor_log" ALTER COLUMN "timein" DROP DEFAULT;ALTER TABLE "visitor_log" ALTER COLUMN "timein" TYPE TIMESTAMP WITH TIME ZONE;',
+  parameters: {},
+  [cause]: error: column "timein" cannot be cast automatically to type timestamp with time zone
+      at Parser.parseErrorMessage (C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend\node_modules\pg-protocol\dist\parser.js:285:98)
+      at Parser.handlePacket (C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend\node_modules\pg-protocol\dist\parser.js:122:29)
+      at Parser.parse (C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend\node_modules\pg-protocol\dist\parser.js:35:38)
+      at Socket.<anonymous> (C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend\node_modules\pg-protocol\dist\index.js:11:42)
+      at Socket.emit (node:events:518:28)
+      at addChunk (node:internal/streams/readable:561:12)
+      at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+      at Readable.push (node:internal/streams/readable:392:5)
+      at TCP.onStreamRead (node:internal/stream_base_commons:189:23) {
+    length: 282,
+    severity: 'ERROR',
+    code: '42804',
+    detail: undefined,
+    hint: 'You might need to specify "USING timein::timestamp with time zone".',
+    position: undefined,
+    internalPosition: undefined,
+    internalQuery: undefined,
+    where: undefined,
+    schema: undefined,
+    table: undefined,
+    column: undefined,
+    dataType: undefined,
+    constraint: undefined,
+    file: 'd:\\pginstaller_12.auto\\postgres.windows-x64\\src\\backend\\commands\\tablecmds.c',
+    line: '10964',
+    routine: 'ATPrepAlterColumnType',
+    sql: 'ALTER TABLE "visitor_log" ALTER COLUMN "timein" SET NOT NULL;ALTER TABLE "visitor_log" ALTER COLUMN "timein" DROP DEFAULT;ALTER TABLE "visitor_log" ALTER COLUMN "timein" TYPE TIMESTAMP WITH TIME ZONE;',
+    parameters: undefined
+  }
+}
+node:internal/process/promises:394
+    triggerUncaughtException(err, true /* fromPromise */);
+    ^
+
+DatabaseError [SequelizeDatabaseError]: column "timein" cannot be cast automatically to type timestamp with time zone
+    at PostgresQuery.formatError (C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend\node_modules\@sequelize\postgres\lib\query.js:344:16)
+    at PostgresQuery.run (C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend\node_modules\@sequelize\postgres\lib\query.js:79:18)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend\node_modules\@sequelize\core\lib\sequelize.js:338:16
+    at async Sequelize.queryRaw (C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend\node_modules\@sequelize\core\lib\sequelize.js:325:12)
+    at async VisitorLog.sync (C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend\node_modules\@sequelize\core\lib\model.js:700:11)
+    at async Sequelize.sync (C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend\node_modules\@sequelize\core\lib\sequelize.js:419:9)
+    at async initDatabase (C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend\models\models.js:96:5) {
+  sql: 'ALTER TABLE "visitor_log" ALTER COLUMN "timein" SET NOT NULL;ALTER TABLE "visitor_log" ALTER COLUMN "timein" DROP DEFAULT;ALTER TABLE "visitor_log" ALTER COLUMN "timein" TYPE TIMESTAMP WITH TIME ZONE;',
+  parameters: {},
+  [cause]: error: column "timein" cannot be cast automatically to type timestamp with time zone
+      at Parser.parseErrorMessage (C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend\node_modules\pg-protocol\dist\parser.js:285:98)
+      at Parser.handlePacket (C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend\node_modules\pg-protocol\dist\parser.js:122:29)
+      at Parser.parse (C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend\node_modules\pg-protocol\dist\parser.js:35:38)
+      at Socket.<anonymous> (C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend\node_modules\pg-protocol\dist\index.js:11:42)
+      at Socket.emit (node:events:518:28)
+      at addChunk (node:internal/streams/readable:561:12)
+      at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+      at Readable.push (node:internal/streams/readable:392:5)
+      at TCP.onStreamRead (node:internal/stream_base_commons:189:23) {
+    length: 282,
+    severity: 'ERROR',
+    code: '42804',
+    detail: undefined,
+    hint: 'You might need to specify "USING timein::timestamp with time zone".',
+    position: undefined,
+    internalPosition: undefined,
+    internalQuery: undefined,
+    where: undefined,
+    schema: undefined,
+    table: undefined,
+    internalQuery: undefined,
+    where: undefined,
+    schema: undefined,
+    table: undefined,
+    where: undefined,
+    schema: undefined,
+    table: undefined,
+    schema: undefined,
+    table: undefined,
+    column: undefined,
+    table: undefined,
+    column: undefined,
+    column: undefined,
+    dataType: undefined,
+    dataType: undefined,
+    constraint: undefined,
+    constraint: undefined,
+    file: 'd:\\pginstaller_12.auto\\postgres.windows-x64\\src\\backend\\commands\\tablecmds.c',
+    line: '10964',
+    routine: 'ATPrepAlterColumnType',
+    sql: 'ALTER TABLE "visitor_log" ALTER COLUMN "timein" SET NOT NULL;ALTER TABLE "visitor_log" ALTER COLUMN "timein" DROP DEFAULT;ALTER TA    sql: 'ALTER TABLE "visitor_log" ALTER COLUMN "timein" SET NOT NULL;ALTER TABLE "visitor_log" ALTER COLUMN "timein" DROP DEFAULT;ALTER TABLE "visitor_log" ALTER COLUMN "timein" TYPE TIMESTAMP WITH TIME ZONE;',
+    parameters: undefined
+  }
+}
+
+Node.js v22.16.0
+PS C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend>
+
+
+
+
+
+
+BLE "visitor_log" ALTER COLUMN "timein" TYPE TIMESTAMP WITH TIME ZONE;',
+    parameters: undefined
+  }
+}
+
+Node.js v22.16.0
+PS C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend>
+
+
+
+
+BLE "visitor_log" ALTER COLUMN "timein" TYPE TIMESTAMP WITH TIME ZONE;',
+    parameters: undefined
+  }
+}
+
+Node.js v22.16.0
+PS C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend>
+
+
+BLE "visitor_log" ALTER COLUMN "timein" TYPE TIMESTAMP WITH TIME ZONE;',
+    parameters: undefined
+  }
+}
+
+Node.js v22.16.0
+PS C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend>
+BLE "visitor_log" ALTER COLUMN "timein" TYPE TIMESTAMP WITH TIME ZONE;',
+    parameters: undefined
+  }
+}
+BLE "visitor_log" ALTER COLUMN "timein" TYPE TIMESTAMP WITH TIME ZONE;',
+    parameters: undefined
+  }
+BLE "visitor_log" ALTER COLUMN "timein" TYPE TIMESTAMP WITH TIME ZONE;',
+BLE "visitor_log" ALTER COLUMN "timein" TYPE TIMESTAMP WITH TIME ZONE;',
+    parameters: undefined
+  }
+BLE "visitor_log" ALTER COLUMN "timein" TYPE TIMESTAMP WITH TIME ZONE;',
+    parameters: undefined
+BLE "visitor_log" ALTER COLUMN "timein" TYPE TIMESTAMP WITH TIME ZONE;',
+BLE "visitor_log" ALTER COLUMN "timein" TYPE TIMESTAMP WITH TIME ZONE;',
+BLE "visitor_log" ALTER COLUMN "timein" TYPE TIMESTAMP WITH TIME ZONE;',
+BLE "visitor_log" ALTER COLUMN "timein" TYPE TIMESTAMP WITH TIME ZONE;',
+BLE "visitor_log" ALTER COLUMN "timein" TYPE TIMESTAMP WITH TIME ZONE;',
+BLE "visitor_log" ALTER COLUMN "timein" TYPE TIMESTAMP WITH TIME ZONE;',
+    parameters: undefined
+  }
+}
+
+Node.js v22.16.0
+PS C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend>
+
+
+
+
+BLE "visitor_log" ALTER COLUMN "timein" TYPE TIMESTAMP WITH TIME ZONE;',
+    parameters: undefined
+  }
+}
+
+Node.js v22.16.0
+PS C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend>
+
+
+BLE "visitor_log" ALTER COLUMN "timein" TYPE TIMESTAMP WITH TIME ZONE;',
+    parameters: undefined
+  }
+}
+
+Node.js v22.16.0
+BLE "visitor_log" ALTER COLUMN "timein" TYPE TIMESTAMP WITH TIME ZONE;',
+    parameters: undefined
+  }
+BLE "visitor_log" ALTER COLUMN "timein" TYPE TIMESTAMP WITH TIME ZONE;',
+    parameters: undefined
+BLE "visitor_log" ALTER COLUMN "timein" TYPE TIMESTAMP WITH TIME ZONE;',
+    parameters: undefined
+BLE "visitor_log" ALTER COLUMN "timein" TYPE TIMESTAMP WITH TIME ZONE;',
+BLE "visitor_log" ALTER COLUMN "timein" TYPE TIMESTAMP WITH TIME ZONE;',
+BLE "visitor_log" ALTER COLUMN "timein" TYPE TIMESTAMP WITH TIME ZONE;',
+    parameters: undefined
+  }
+}
+
+Node.js v22.16.0
+PS C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend>
+
