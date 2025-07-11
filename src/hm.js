@@ -213,3 +213,152 @@ module.exports = {
   VisitorLog,
   initDatabase
 };
+
+
+
+//mmg
+const login = async (req, res) => {
+  const { email, password, branch } = req.body;
+
+  try {
+    console.log(`Login attempt: ${email} for branch ${branch}`);
+
+    if (!email || !password || !branch) {
+      return res.status(400).json({ error: 'Email, password, and branch are required' });
+    }
+
+    const adminResult = await pool.query(
+      'SELECT * FROM admin_users WHERE email = $1',
+      [email]
+    );
+
+    let user = adminResult.rows[0];
+    let userTable = 'admin_users';
+
+    if (!user) {
+      const userResult = await pool.query(
+        'SELECT * FROM users_table WHERE email = $1',
+        [email]
+      );
+      user = userResult.rows[0];
+      userTable = 'users_table';
+    }
+
+    if (!user) {
+      console.log(`User not found: ${email}`);
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    // FIX: Handle branches parsing for admin users
+    let userBranches = [];
+    if (userTable === 'admin_users') {
+      try {
+        userBranches = user.branches ? JSON.parse(user.branches) : [];
+      } catch (parseError) {
+        console.error('Error parsing branches JSON:', parseError);
+        userBranches = [];
+      }
+    } else {
+      userBranches = [user.branch];
+    }
+
+    if (!userBranches.includes(branch)) {
+      console.log(`User ${email} attempted to access unauthorized branch: ${branch}`);
+      return res.status(403).json({ error: 'You do not have access to this branch' });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+      console.log(`Invalid password for user: ${email}`);
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    const payload = {
+      user_id: user.id,
+      email: user.email,
+      branch: branch,
+      role: user.role || 'user',
+      user_table: userTable
+    };
+
+    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '8h' });
+
+    res.json({
+      token,
+      user: {
+        id: user.id,
+        email: user.email,
+        branch: branch,
+        role: user.role || 'user',
+      }
+    });
+
+  } catch (err) {
+    console.error('Login error:', err);
+    res.status(500).json({ error: 'Server error during login' });
+  }
+};
+
+// In your authController.js
+const verifyAdminCredentials = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    if (!email || !password) {
+      return res.status(400).json({ success: false, error: 'Email and password are required' });
+    }
+    
+    const adminResult = await pool.query(
+      'SELECT * FROM admin_users WHERE email = $1',
+      [email]
+    );
+
+    const user = adminResult.rows[0];
+
+    if (!user) {
+      console.log(`Admin not found: ${email}`);
+      return res.status(401).json({ success: false, error: 'Invalid credentials' });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+      console.log(`Invalid password for admin: ${email}`);
+      return res.status(401).json({ success: false, error: 'Invalid credentials' });
+    }
+
+    // FIX: Parse the JSON string back to an array
+    let branches = [];
+    try {
+      branches = user.branches ? JSON.parse(user.branches) : [];
+    } catch (parseError) {
+      console.error('Error parsing branches JSON:', parseError);
+      branches = [];
+    }
+
+    const tempToken = jwt.sign({ 
+      user_id: user.id,
+      email: user.email,
+      role: user.role || 'admin',
+      temp: true 
+    }, JWT_SECRET, { expiresIn: '5m' });
+
+    return res.json({
+      success: true,
+      token: tempToken,
+      branches: branches.map(branch => ({ branchName: branch, branchCode: branch })) 
+    });
+
+  } catch (err) {
+    console.error('Admin verification error:', err);
+    res.status(500).json({ success: false, error: 'Server error during verification' });
+  }
+};
+
+
+//rregis
+const result = await pool.query(
+  'INSERT INTO admin_users (email, password, branches, role, created_at) VALUES ($1, $2, $3, $4, NOW()) RETURNING id, email, role, created_at',
+  [email, hashedPassword, JSON.stringify(branches), role || 'user'] // Convert array to JSON string
+);
