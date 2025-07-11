@@ -3880,9 +3880,10 @@ Fetching all unique branches
 Found 3 unique branches
 Admin verification error: TypeError: branches.map is not a function
     at verifyAdminCredentials (C:\Users\f8877557\OneDrive - FRG\Desktop\Production\file-backend\new-backend\controllers\authController.js:330:26)
-//updated model
+//new updated model
 const { Sequelize, DataTypes, Model } = require('@sequelize/core');
 const { PostgresDialect } = require('@sequelize/postgres');
+const bcrypt = require('bcrypt');
 
 const sequelize = new Sequelize({
   dialect: PostgresDialect,
@@ -3925,27 +3926,13 @@ FnbBranches.init({
   timestamps: false
 });
 
-// Table 3: admin_users - Keep as TEXT but add getter/setter for JSON parsing
+// Table 3: admin_users - Use PostgreSQL ARRAY type to store as actual array
 class AdminUsers extends Model {}
 AdminUsers.init({
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   email: { type: DataTypes.STRING, allowNull: false, unique: true },
   password: { type: DataTypes.STRING, allowNull: false },
-  branches: { 
-    type: DataTypes.TEXT,
-    get() {
-      const rawValue = this.getDataValue('branches');
-      if (!rawValue) return [];
-      try {
-        return JSON.parse(rawValue);
-      } catch (e) {
-        return [];
-      }
-    },
-    set(value) {
-      this.setDataValue('branches', JSON.stringify(value));
-    }
-  },
+  branches: { type: DataTypes.ARRAY(DataTypes.STRING) }, // PostgreSQL array - will be returned as JS array
   role: { type: DataTypes.STRING, allowNull: false },
   created_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
   last_login: { type: DataTypes.DATE, allowNull: true }
@@ -4046,7 +4033,7 @@ async function seedBranches() {
   }
 }
 
-// Seed admin user - Store branches as JSON string to match authController
+// Seed admin user using raw SQL to ensure compatibility with authController
 async function seedAdminUser() {
   try {
     const allBranches = [
@@ -4064,22 +4051,32 @@ async function seedAdminUser() {
       'KEJETIA BRANCH'
     ];
     
-    const adminData = {
-      email: 'admin@fnb.com',
-      password: 'password12345', 
-      branches: allBranches, // Store as array - the setter will convert to JSON string
-      role: 'admin' 
-    };
+    // Hash the password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash('password12345', salt);
     
-    const [adminUser, created] = await AdminUsers.findOrCreate({
-      where: { email: adminData.email },
-      defaults: adminData
+    // Use raw SQL to insert admin user with PostgreSQL array syntax
+    const insertQuery = `
+      INSERT INTO admin_users (email, password, branches, role, created_at) 
+      VALUES ($1, $2, $3, $4, NOW())
+      ON CONFLICT (email) DO NOTHING
+      RETURNING id
+    `;
+    
+    const result = await sequelize.query(insertQuery, {
+      replacements: [
+        'admin@fnb.com',
+        hashedPassword,
+        allBranches, // PostgreSQL will handle this as an array
+        'admin'
+      ],
+      type: Sequelize.QueryTypes.INSERT
     });
     
-    if (created) {
+    if (result[1] > 0) { // result[1] is the number of affected rows
       console.log('✅ Default admin user created');
-      console.log(`   Email: ${adminData.email}`);
-      console.log(`   Password: ${adminData.password}`);
+      console.log(`   Email: admin@fnb.com`);
+      console.log(`   Password: password12345`);
       console.log(`   Branches: ${allBranches.length} branches assigned`);
     } else {
       console.log('✅ Admin user already exists');
