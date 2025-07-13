@@ -5150,3 +5150,56 @@ module.exports = {
   updateBranch,
   deleteBranch
 };
+
+
+//new hand
+// Replace this part of your handleCreateBranch function:
+
+const handleCreateBranch = async (e) => {
+  e.preventDefault();
+  setBranchError("");
+  setBranchSuccess("");
+
+  if (!newBranchName || !newBranchCode) {
+    setBranchError("Please fill in all branch fields");
+    return;
+  }
+
+  setBranchLoading(true);
+
+  try {
+    const response = await fetch(BRANCHES_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-auth-token': token
+      },
+      body: JSON.stringify({
+        branch_name: newBranchName,
+        branch_code: newBranchCode
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Branch creation failed');
+    }
+
+    // FIX: The backend returns the branch directly, not wrapped in a 'branch' property
+    // Change this line:
+    // setBranches([...branches, data.branch]);
+    // To this:
+    setBranches([...branches, data]);
+    
+    setBranchSuccess("Branch created successfully!");
+    
+    // Reset form
+    setNewBranchName("");
+    setNewBranchCode("");
+  } catch (err) {
+    setBranchError(err.message);
+  } finally {
+    setBranchLoading(false);
+  }
+};
